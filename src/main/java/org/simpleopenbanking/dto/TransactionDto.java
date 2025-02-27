@@ -9,5 +9,5 @@ import java.time.LocalDateTime;
 /**
  * DTO for {@link org.simpleopenbanking.entity.Transaction}
  */
-public record TransactionDto(long Id, String accountIban, BigDecimal amount, CurrencyType currencyType, String description, LocalDateTime timestamp) implements Serializable {
+public record TransactionDto(long Id, long senderAccountIban, long receiverAccountIban, BigDecimal amount, CurrencyType currencyType, LocalDateTime timestamp) implements Serializable {
   }

@@ -10,6 +10,6 @@ import java.time.LocalDateTime;
 /**
  * DTO for {@link Transaction}
  */
-public record TransactionCreateDto(String accountIban, BigDecimal amount, CurrencyType currencyType, String description,
+public record TransactionCreateDto(long senderAccountIban, long receiverAccountIban, BigDecimal amount, CurrencyType currencyType,
                                    LocalDateTime timestamp) implements Serializable {
 }

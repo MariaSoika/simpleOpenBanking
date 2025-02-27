@@ -8,5 +8,5 @@ import java.math.BigDecimal;
 /**
  * DTO for {@link Account}
  */
-public record AccountDto(String iban, BigDecimal balance) implements Serializable {
+public record AccountDto(long iban, BigDecimal balance) implements Serializable {
 }
