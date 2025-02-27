@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @Table(name = "accounts")
 public class Account {
+
     @Id
     private String iban;
 
