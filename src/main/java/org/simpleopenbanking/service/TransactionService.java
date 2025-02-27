@@ -1,9 +1,9 @@
 package org.simpleopenbanking.service;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.simpleopenbanking.dto.TransactionCreateDto;
 import org.simpleopenbanking.dto.TransactionDto;
-import org.simpleopenbanking.entity.Transaction;
 import org.simpleopenbanking.enums.CurrencyType;
 import org.simpleopenbanking.mapper.TransactionMapper;
 import org.simpleopenbanking.repository.TransactionRepository;
@@ -17,13 +17,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Transactional(readOnly = true)
 public class TransactionService {
 
@@ -38,7 +39,7 @@ public class TransactionService {
     public Page<TransactionDto> getLast10Transactions(Long accountIban) {
         Pageable pageable = PageRequest.of(0, 10);
         logger.info("Get last 10 transactions for account with IBAN: {}", accountIban);
-        return transactionRepository.findTop10ByAccountIbanOrderByTimestampDesc(accountIban, pageable)
+        return transactionRepository.findTop10ByReceiverAccountIbanOrderByTimestampDesc(accountIban, pageable)
                 .map(transactionMapper::toDto);
     }
 
@@ -55,16 +56,16 @@ public class TransactionService {
                 .uri("/accounts/{accountIban}/balance", ibanFrom)
                 .retrieve()
                 .bodyToMono(BigDecimal.class)
+                .publishOn(Schedulers.boundedElastic())
+                .publishOn(Schedulers.boundedElastic())
                 .flatMap(balance -> {
                     if (balance.compareTo(amount) < 0) {
                         logger.warn("Insufficient balance for payment from: {}. Available balance: {}", ibanFrom, balance);
-                        return Mono.just(null);
+                        return Mono.empty();
                     }
 
                     TransactionCreateDto transactionDto = transactionMapper.toEntity(ibanFrom, ibanTo, amount, currencyType, LocalDateTime.now());
-
-                    Transaction transaction = transactionMapper.toEntity(transactionDto);
-                    transactionRepository.save(transaction);
+                    transactionRepository.save(transactionMapper.toEntity(transactionDto));
 
                     logger.info("Transaction initiated and saved: {}", transactionDto);
 

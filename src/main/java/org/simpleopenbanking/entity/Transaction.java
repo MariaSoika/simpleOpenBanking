@@ -18,17 +18,17 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long Id;
 
-    @Column(name = "senderAccountIban", nullable = false)
+    @Column(name = "sender_account_iban", nullable = false)
     private long senderAccountIban;
 
-    @Column(name = "receiverAccountIban", nullable = false)
+    @Column(name = "receiver_account_iban", nullable = false)
     private long receiverAccountIban;
 
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "currencyType", nullable = false)
+    @Column(name = "currency_type", nullable = false)
     private CurrencyType currencyType;
 
     @Column(name = "time", nullable = false)

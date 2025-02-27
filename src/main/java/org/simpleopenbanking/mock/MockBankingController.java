@@ -1,5 +1,6 @@
 package org.simpleopenbanking.mock;
 
+import lombok.AllArgsConstructor;
 import org.simpleopenbanking.entity.Transaction;
 import org.simpleopenbanking.enums.CurrencyType;
 import org.springframework.web.bind.annotation.RestController;

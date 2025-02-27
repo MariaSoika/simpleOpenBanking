@@ -1,10 +1,11 @@
 package org.simpleopenbanking.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public enum CurrencyType {
     UAH("UAH"),
     CHF("CHF"),

@@ -1,14 +1,12 @@
 package org.simpleopenbanking.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.simpleopenbanking.dto.AccountDto;
 import org.simpleopenbanking.dto.TransactionDto;
-import org.simpleopenbanking.mapper.AccountMapper;
 import org.simpleopenbanking.service.AccountService;
 import org.simpleopenbanking.service.TransactionService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

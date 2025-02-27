@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    Page<Transaction> findTop10ByAccountIbanOrderByTimestampDesc(long accountIban, Pageable pageable);
+    Page<Transaction> findTop10ByReceiverAccountIbanOrderByTimestampDesc(long accountIban, Pageable pageable);
 }

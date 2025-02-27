@@ -1,5 +1,6 @@
 package org.simpleopenbanking.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.simpleopenbanking.dto.TransactionCreateDto;
 import org.simpleopenbanking.enums.CurrencyType;
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/payments")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class PaymentController {
 
     private final TransactionService transactionService;

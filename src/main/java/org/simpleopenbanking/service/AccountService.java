@@ -1,5 +1,6 @@
 package org.simpleopenbanking.service;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.simpleopenbanking.dto.AccountDto;
 import org.simpleopenbanking.mapper.AccountMapper;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AccountService {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
