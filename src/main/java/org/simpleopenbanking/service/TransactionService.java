@@ -36,7 +36,7 @@ public class TransactionService {
     @Operation(summary = "last 10 transaction of receiver", description = "Used custom Sql request")
     @Cacheable(value = "transactions", key = "#accountIban")
     @Transactional
-    public Page<TransactionDto> getLast10Transactions(Long accountIban) {
+    public Page<TransactionDto> getLast10Transactions(String accountIban) {
         Pageable pageable = PageRequest.of(0, 10);
         logger.info("Get last 10 transactions for account with IBAN: {}", accountIban);
         return transactionRepository.findTop10ByReceiverAccountIbanOrderByTimestampDesc(accountIban, pageable)

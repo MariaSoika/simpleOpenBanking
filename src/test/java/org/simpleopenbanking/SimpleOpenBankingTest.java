@@ -52,10 +52,11 @@ public class SimpleOpenBankingTest {
 
     @Mock
     private final WebClient webClient = WebClient.create();
-
+    //"UA729170132775421511313212280"
+    //"UA165808213459573340183621023"
     @Test
     public void testInitiatePayment_Success() {
-        PaymentRequestDto paymentRequestDto = new PaymentRequestDto(1L, 2L, 1000L, CurrencyType.UAH);
+        PaymentRequestDto paymentRequestDto = new PaymentRequestDto("UA729170132775421511313212280" , "UA165808213459573340183621023", 1000L, CurrencyType.UAH);
 
         Mockito.when(webClient.get()
                 .uri("http://localhost:8080/api/accounts/{accountIban}/balance", paymentRequestDto.ibanFrom())
@@ -72,7 +73,7 @@ public class SimpleOpenBankingTest {
 
     @Test
     public void testInitiatePayment_FailedSameIban() {
-        PaymentRequestDto paymentRequestDto = new PaymentRequestDto(1L, 1L, 100L, CurrencyType.UAH);
+        PaymentRequestDto paymentRequestDto = new PaymentRequestDto("UA729170132775421511313212280" , "UA729170132775421511313212280" , 100L, CurrencyType.UAH);
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             transactionService.initiatePayment(paymentRequestDto);
@@ -81,11 +82,11 @@ public class SimpleOpenBankingTest {
 
     @Test
     public void testGetAccountByIBAN_Success() {
-        AccountDto accountDto = new AccountDto(1L, 100L, CurrencyType.UAH);
+        AccountDto accountDto = new AccountDto("UA729170132775421511313212280" , 100L, CurrencyType.UAH);
         Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(new Account()));
         Mockito.when(accountMapper.toDto(Mockito.any())).thenReturn(accountDto);
 
-        AccountDto result = accountService.getAccountByIBAN(1L);
+        AccountDto result = accountService.getAccountByIBAN("UA729170132775421511313212280" );
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1L, result.iban());
@@ -99,7 +100,7 @@ public class SimpleOpenBankingTest {
         Mockito.when(transactionRepository.findTop10ByReceiverAccountIbanOrderByTimestampDesc(Mockito.any(), Mockito.any()))
                 .thenReturn(page);
 
-        Page<TransactionDto> result = transactionService.getLast10Transactions(1L);
+        Page<TransactionDto> result = transactionService.getLast10Transactions("UA729170132775421511313212280" );
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(3, result.getTotalElements());

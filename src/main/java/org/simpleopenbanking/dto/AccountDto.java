@@ -7,5 +7,5 @@ import java.io.Serializable;
 /**
  * DTO for {@link Account}
  */
-public record AccountDto(Long iban, Long balance, CurrencyType currencyType) implements Serializable {
+public record AccountDto(String iban, Long balance, CurrencyType currencyType) implements Serializable {
 }

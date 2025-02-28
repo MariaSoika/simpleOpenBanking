@@ -1,6 +1,7 @@
 package org.simpleopenbanking.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.simpleopenbanking.enums.CurrencyType;
 
@@ -12,8 +13,12 @@ import org.simpleopenbanking.enums.CurrencyType;
 @Table(name = "accounts")
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long iban;
+    @Column(name = "iban", nullable = false, length = 29)
+    @Pattern(
+            regexp = "^UA\\d{2}\\d{6}\\d{19}$",
+            message = "IBAN повинен відповідати формату України: UA + 2 цифри + 6 цифр МФО + 19 цифр рахунку"
+    )
+    private String iban;
 
     @Column(name = "balance", nullable = false)
     private Long balance;

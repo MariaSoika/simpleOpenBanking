@@ -8,6 +8,6 @@ import java.time.LocalDateTime;
 /**
  * DTO for {@link Transaction}
  */
-public record TransactionCreateDto(Long senderAccountIban, Long receiverAccountIban,
+public record TransactionCreateDto(String senderAccountIban, String receiverAccountIban,
                                    Long amount, CurrencyType currencyType) implements Serializable {
 }

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    Page<Transaction> findTop10ByReceiverAccountIbanOrderByTimestampDesc(Long accountIban, Pageable pageable);
+    Page<Transaction> findTop10ByReceiverAccountIbanOrderByTimestampDesc(String accountIban, Pageable pageable);
 }

@@ -18,13 +18,13 @@ public class AccountController {
     private final TransactionService transactionService;
 
     @GetMapping("/{receiverAccountIban}/balance")
-    public ResponseEntity<AccountDto> getAccount(@PathVariable long receiverAccountIban) {
+    public ResponseEntity<AccountDto> getAccount(@PathVariable String receiverAccountIban) {
         AccountDto account = accountService.getAccountByIBAN(receiverAccountIban);
         return ResponseEntity.ok(account);
     }
 
     @GetMapping("/{receiverAccountIban}/transactions")
-    public ResponseEntity<Page<TransactionDto>> getLast10Transactions(@PathVariable long receiverAccountIban) {
+    public ResponseEntity<Page<TransactionDto>> getLast10Transactions(@PathVariable String receiverAccountIban) {
         Page<TransactionDto> transactions = transactionService.getLast10Transactions(receiverAccountIban);
         return ResponseEntity.ok(transactions);
     }

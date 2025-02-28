@@ -24,9 +24,9 @@ public class AccountService {
     @Operation(summary = "get account by IBAN", description = "simple findById()")
     @Cacheable(value = "accounts", key = "#accountIban")
     @Transactional
-    public AccountDto getAccountByIBAN(long accountIban) {
+    public AccountDto getAccountByIBAN(String accountIban) {
         logger.info("getting account by IBAN {}...", accountIban);
-        return accountRepository.findById(accountIban)
+        return accountRepository.findByIban(accountIban)
                 .map(accountMapper::toDto)
                 .orElseGet(() -> {
                     logger.error("Something went wrong");
