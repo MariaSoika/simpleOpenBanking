@@ -1,5 +1,6 @@
 package org.simpleopenbanking.service;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.simpleopenbanking.dto.AccountDto;
 import org.simpleopenbanking.dto.PaymentRequestDto;
@@ -9,6 +10,7 @@ import org.simpleopenbanking.mapper.TransactionMapper;
 import org.simpleopenbanking.repository.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +34,7 @@ public class TransactionService {
     private final TransactionMapper transactionMapper;
     private final WebClient webClient = WebClient.create();
 
+    @Operation(summary = "last 10 transaction of receiver", description = "Used custom Sql request")
     @Cacheable(value = "transactions", key = "#accountIban")
     @Transactional
     public Page<TransactionDto> getLast10Transactions(Long accountIban) {
@@ -41,6 +44,8 @@ public class TransactionService {
                 .map(transactionMapper::toDto);
     }
 
+    @Operation(summary = "Initiate Payment", description = "Create a payment transaction between two accounts, " +
+            "using: IBAN of sender, IBAN of receiver, amount, currencyType (enum)")
     @Transactional
     public TransactionDto initiatePayment(PaymentRequestDto paymentRequestDto) {
         logger.info("Initiating transaction from: {} to: {}", paymentRequestDto.ibanFrom(), paymentRequestDto.ibanTo());

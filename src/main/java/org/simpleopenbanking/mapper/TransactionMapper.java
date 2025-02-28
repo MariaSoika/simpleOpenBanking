@@ -16,5 +16,4 @@ import java.time.LocalDateTime;
 
     Transaction toEntity(PaymentRequestDto paymentRequestDto, @Context LocalDateTime now);
 
-    //TransactionDto toEntity(PaymentRequestDto paymentRequestDto, LocalDateTime now);
 }
