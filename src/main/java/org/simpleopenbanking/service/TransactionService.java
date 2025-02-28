@@ -63,9 +63,16 @@ public class TransactionService {
                 throw new IllegalStateException("Insufficient balance");
             }
 
-            Transaction transaction = transactionMapper.toEntity(transactionMapper.toEntity(paymentRequestDto, LocalDateTime.now()));
+            Transaction transaction = transactionMapper.toEntity(paymentRequestDto, LocalDateTime.now());
+            transaction.setSenderAccountIban(paymentRequestDto.ibanFrom());
+            transaction.setReceiverAccountIban(paymentRequestDto.ibanTo());
+            transaction.setAmount(paymentRequestDto.amount());
+            transaction.setCurrencyType(paymentRequestDto.currencyType());
+            transaction.setTimestamp(LocalDateTime.now());
+
             Transaction savedTransaction = transactionRepository.save(transaction);
             logger.info("Transaction successfully initiated and saved");
+
             return transactionMapper.toDto(savedTransaction);
 
         } catch (Exception e) {

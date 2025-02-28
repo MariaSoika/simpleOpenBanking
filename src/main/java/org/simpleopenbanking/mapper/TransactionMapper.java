@@ -14,5 +14,7 @@ import java.time.LocalDateTime;
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Transaction partialUpdate(TransactionDto transactionDto, @MappingTarget Transaction transaction);
 
-    TransactionDto toEntity(PaymentRequestDto paymentRequestDto, LocalDateTime now);
+    Transaction toEntity(PaymentRequestDto paymentRequestDto, @Context LocalDateTime now);
+
+    //TransactionDto toEntity(PaymentRequestDto paymentRequestDto, LocalDateTime now);
 }
