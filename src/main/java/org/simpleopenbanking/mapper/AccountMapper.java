@@ -13,5 +13,4 @@ public interface AccountMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Account partialUpdate(AccountDto accountDto, @MappingTarget Account account);
 
-    //Account toEntity(AccountCreateDto accountCreateDto);
 }

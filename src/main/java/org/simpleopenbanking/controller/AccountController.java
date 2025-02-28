@@ -1,6 +1,5 @@
 package org.simpleopenbanking.controller;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.simpleopenbanking.dto.AccountDto;
 import org.simpleopenbanking.dto.TransactionDto;
@@ -18,15 +17,15 @@ public class AccountController {
     private final AccountService accountService;
     private final TransactionService transactionService;
 
-    @GetMapping("/{accountIban}/balance")
-    public ResponseEntity<AccountDto> getAccount(@PathVariable long accountIban) {
-        AccountDto account = accountService.getAccountByIBAN(accountIban);
+    @GetMapping("/{receiverAccountIban}/balance")
+    public ResponseEntity<AccountDto> getAccount(@PathVariable long receiverAccountIban) {
+        AccountDto account = accountService.getAccountByIBAN(receiverAccountIban);
         return ResponseEntity.ok(account);
     }
 
-    @GetMapping("/{accountIban}/transactions")
-    public ResponseEntity<Page<TransactionDto>> getLast10Transactions(@PathVariable long accountIban) {
-        Page<TransactionDto> transactions = transactionService.getLast10Transactions(accountIban);
+    @GetMapping("/{receiverAccountIban}/transactions")
+    public ResponseEntity<Page<TransactionDto>> getLast10Transactions(@PathVariable long receiverAccountIban) {
+        Page<TransactionDto> transactions = transactionService.getLast10Transactions(receiverAccountIban);
         return ResponseEntity.ok(transactions);
     }
 

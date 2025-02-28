@@ -1,7 +1,6 @@
 package org.simpleopenbanking.service;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.simpleopenbanking.dto.AccountDto;
 import org.simpleopenbanking.mapper.AccountMapper;
 import org.simpleopenbanking.repository.AccountRepository;
@@ -26,6 +25,9 @@ public class AccountService {
     public AccountDto getAccountByIBAN(long accountIban) {
         return accountRepository.findById(accountIban)
                 .map(accountMapper::toDto)
-                .orElse(null);
+                .orElseGet(() -> {
+                    logger.error("Something went wrong");
+                    return null;
+                });
     }
 }

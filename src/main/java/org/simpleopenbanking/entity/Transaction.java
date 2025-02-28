@@ -3,8 +3,6 @@ package org.simpleopenbanking.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.simpleopenbanking.enums.CurrencyType;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,16 +14,16 @@ import java.time.LocalDateTime;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long Id;
+    private Long Id;
 
     @Column(name = "sender_account_iban", nullable = false)
-    private long senderAccountIban;
+    private Long senderAccountIban;
 
     @Column(name = "receiver_account_iban", nullable = false)
-    private long receiverAccountIban;
+    private Long receiverAccountIban;
 
     @Column(name = "amount", nullable = false)
-    private BigDecimal amount;
+    private Long amount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "currency_type", nullable = false)
@@ -33,5 +31,4 @@ public class Transaction {
 
     @Column(name = "time", nullable = false)
     private LocalDateTime timestamp;
-
 }

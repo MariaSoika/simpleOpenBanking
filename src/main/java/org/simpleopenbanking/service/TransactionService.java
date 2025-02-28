@@ -1,10 +1,10 @@
 package org.simpleopenbanking.service;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.simpleopenbanking.dto.TransactionCreateDto;
+import org.simpleopenbanking.dto.AccountDto;
+import org.simpleopenbanking.dto.PaymentRequestDto;
 import org.simpleopenbanking.dto.TransactionDto;
-import org.simpleopenbanking.enums.CurrencyType;
+import org.simpleopenbanking.entity.Transaction;
 import org.simpleopenbanking.mapper.TransactionMapper;
 import org.simpleopenbanking.repository.TransactionRepository;
 import org.slf4j.Logger;
@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -44,34 +42,36 @@ public class TransactionService {
     }
 
     @Transactional
-    public TransactionCreateDto initiatePayment(long ibanFrom, long ibanTo, BigDecimal amount, CurrencyType currencyType) {
-        logger.info("Initiating transaction from: {} to: {}", ibanFrom, ibanTo);
+    public TransactionDto initiatePayment(PaymentRequestDto paymentRequestDto) {
+        logger.info("Initiating transaction from: {} to: {}", paymentRequestDto.ibanFrom(), paymentRequestDto.ibanTo());
 
-        if (Objects.equals(ibanFrom, ibanTo)) {
-            logger.warn("Cannot initiate payment with the same IBANs: {}", ibanFrom);
-            return null;
+        if (Objects.equals(paymentRequestDto.ibanFrom(), paymentRequestDto.ibanTo())) {
+            logger.warn("Cannot initiate payment with the same IBANs: {}", paymentRequestDto.ibanFrom());
+            throw new IllegalArgumentException("IBANs must be different");
         }
 
-        return webClient.get()
-                .uri("/accounts/{accountIban}/balance", ibanFrom)
-                .retrieve()
-                .bodyToMono(BigDecimal.class)
-                .publishOn(Schedulers.boundedElastic())
-                .publishOn(Schedulers.boundedElastic())
-                .flatMap(balance -> {
-                    if (balance.compareTo(amount) < 0) {
-                        logger.warn("Insufficient balance for payment from: {}. Available balance: {}", ibanFrom, balance);
-                        return Mono.empty();
-                    }
+        try {
+            Long balance = webClient.get()
+                    .uri("http://localhost:8080/api/accounts/{accountIban}/balance", paymentRequestDto.ibanFrom())
+                    .retrieve()
+                    .bodyToMono(AccountDto.class)
+                    .flatMap(response -> Mono.just(response.balance()))
+                    .block();
 
-                    TransactionCreateDto transactionDto = transactionMapper.toEntity(ibanFrom, ibanTo, amount, currencyType, LocalDateTime.now());
-                    transactionRepository.save(transactionMapper.toEntity(transactionDto));
+            if (balance == null || balance.compareTo(paymentRequestDto.amount()) < 0) {
+                logger.warn("Insufficient balance for payment from: {}. Available balance: {}", paymentRequestDto.ibanFrom(), balance);
+                throw new IllegalStateException("Insufficient balance");
+            }
 
-                    logger.info("Transaction initiated and saved: {}", transactionDto);
+            Transaction transaction = transactionMapper.toEntity(transactionMapper.toEntity(paymentRequestDto, LocalDateTime.now()));
+            Transaction savedTransaction = transactionRepository.save(transaction);
+            logger.info("Transaction successfully initiated and saved");
+            return transactionMapper.toDto(savedTransaction);
 
-                    return Mono.just(transactionDto);
-                })
-                .doOnError(error -> logger.error("Error initiating payment: {}", error.getMessage())).block();
+        } catch (Exception e) {
+            logger.error("Error initiating payment: {}", e.getMessage(), e);
+            throw new RuntimeException("Payment initiation failed", e);
+        }
     }
 }
 

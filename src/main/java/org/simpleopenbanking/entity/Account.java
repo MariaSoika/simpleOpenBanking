@@ -1,10 +1,8 @@
 package org.simpleopenbanking.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.math.BigDecimal;
+import org.simpleopenbanking.enums.CurrencyType;
 
 @Entity
 @Getter
@@ -15,8 +13,12 @@ import java.math.BigDecimal;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long iban;
+    private Long iban;
 
     @Column(name = "balance", nullable = false)
-    private BigDecimal balance;
+    private Long balance;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "currency_type", nullable = false)
+    private CurrencyType currencyType;
 }
